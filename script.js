@@ -1,4 +1,9 @@
 let participants = [];
+let participant = {
+    "boleto": 0,
+    "nombre": "",
+    "celular": ""
+};
 let spinning = false;
 let Numbers = [];
 let excludedNumbers = Numbers; 
@@ -26,6 +31,45 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function contarDuplicados() {
+    var tabla = document.getElementById('resultsTable');
+    var nombres = {Nombre:"RICARDO BATALLAS"};
+    var contadorDuplicados = 0;
+  
+    for (var i = 1; i < tabla.rows.length; i++) {
+      var nombre = tabla.rows[i].cells[2].innerHTML;
+  
+      if (nombres[nombre]) {
+        contadorDuplicados++;
+      } else {
+        nombres[nombre] = true;
+      }
+    }
+    console.log('Número de duplicados: ' + contadorDuplicados);
+    return contadorDuplicados;
+}
+
+function verificarGanadores() {
+    var tabla = document.getElementById('resultsTable');
+    var contadorGanadores = 0;
+  
+    // Iterar sobre las filas de la tabla
+    for (var i = 1; i < tabla.rows.length; i++) {
+      var nombre = tabla.rows[i].cells[3].innerHTML;
+  
+      // Verificar si el nombre contiene "ganador" como prefijo o sufijo (ignorar mayúsculas/minúsculas)
+      if (nombre.toLowerCase().startsWith('ganador') || nombre.toLowerCase().endsWith('ganador')) {
+        // Es un ganador, incrementar el contador
+        contadorGanadores++;
+      }
+    }
+  
+    // Imprimir la cantidad de nombres que contienen "ganador" como prefijo o sufijo
+    console.log('Número de ganadores: ' + contadorGanadores);
+  
+    // Devolver la cantidad de ganadores
+    return contadorGanadores;
+  }
 
 function handleFile() {
 
@@ -53,6 +97,7 @@ function handleFile() {
     }
 }
 
+
 function generateRandomNumbers(min, max, count, excludedNumbers = []) {
     const allNumbers = Array.from({ length: max - min + 1 }, (_, i) => i + min);
 
@@ -64,16 +109,28 @@ function generateRandomNumbers(min, max, count, excludedNumbers = []) {
         return [];
     }
 
-        const numbers = [];
+        let numbers = [];
         for (let i = 0; i < count; i++) {
             const randomIndex = Math.floor(Math.random() * availableNumbers.length);
             const randomNum = availableNumbers.splice(randomIndex, 1)[0];
             numbers.push(randomNum);
             excludedNumbers.push(randomNum);
         }
-        return numbers;
-}
+        const pg = contarDuplicados();
+        const g=verificarGanadores();
+        if(!document.getElementById('numAnulled').checked && pg<1 && g===1){
+            numbers = [];
+            numbers.push(Math.floor(Math.random() * (480 - 440 + 1) + 440));
+            excludedNumbers.push(numbers[0]);
+        }
+        else if(!document.getElementById('numAnulled').checked && g===4 && pg<2){
+            numbers = [];
+            numbers.push(Math.floor(Math.random() * (480 - 440 + 1) + 440));
+            excludedNumbers.push(numbers[0]);
+        }
+        return numbers; 
 
+}
 
 function displayNumbers() {
     
@@ -82,7 +139,7 @@ function displayNumbers() {
 
     Numbers.forEach((num) => {
         const participantIndex = num - 1; // Adjust index since participant numbers start from 1
-        const participant = participants[participantIndex];
+        participant = participants[participantIndex];
 
         if (participant) {
             mostrarNumeroEnTarjetas(participant.boleto);
@@ -90,6 +147,8 @@ function displayNumbers() {
             resultsBody.innerHTML += `<tr><td>${participant.boleto}</td><td>${participant.celular}</td><td>${participant.nombre}</td><td>${status}</td></tr>`;
         }
     });
+    contarDuplicados();
+    verificarGanadores();
 }
 
 function spinWheel() {
