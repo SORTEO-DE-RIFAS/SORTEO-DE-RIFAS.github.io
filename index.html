@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ruleta de Números</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <input
+      type="file"
+      id="excelInput"
+      accept=".xlsx, .xls"
+      onchange="handleFile()"
+    />
+    <hr />
+    <canvas id="confetti"></canvas>
+    <div id="cards">
+      <div class="card" id="card1">0</div>
+      <div class="card" id="card2">0</div>
+      <div class="card" id="card3">0</div>
+    </div>
+
+    <label for="numAnulled">Números Anulados</label>
+    <input type="checkbox" id="numAnulled" checked="true" />
+
+    <label for="numWinners">Números Ganadores</label>
+    <input type="checkbox" id="numWinners" />
+
+    <button id="spinButton" onclick="spinWheel()">Girar</button>
+    <br />
+    <br />
+    <div>
+      <label for="numWinners">Ingrese el nombre del premio</label>
+      <input type="text" id="txtPremio" />
+    </div>
+
+    <div class="contenedor">
+      <table id="resultsTable">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Celular</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="confetti.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
